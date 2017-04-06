@@ -1,0 +1,4 @@
+rootProject.name = 'neural-networks'
+include 'core'
+include 'web'
+
