@@ -19,9 +19,8 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
-task("wordToPdf", type: MsWordToPdfConversionTask)
-        {
-            from("docs/docx")
-            into("docs/pdf")
-            useLocalMsWord = true
-        }
+task("wordToPdf", type: MsWordToPdfConversionTask) {
+    from("docs/docx")
+    into("docs/pdf")
+    useLocalMsWord = true
+}
