@@ -12,4 +12,12 @@ public abstract class GenericLayer {
         this.inputWidth = inputWidth;
         this.outputWidth = outputWidth;
     }
+
+    public int getInputWidth() {
+        return inputWidth;
+    }
+
+    public int getOutputWidth() {
+        return outputWidth;
+    }
 }
