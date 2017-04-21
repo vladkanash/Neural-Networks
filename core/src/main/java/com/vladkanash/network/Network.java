@@ -1,17 +1,33 @@
 package com.vladkanash.network;
 
+import com.vladkanash.layer.GenericLayer;
+
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Created by vladk on 13.04.2017.
  */
 abstract class Network {
 
-    private final DataSet dataSet = new DataSet();
+    private DataSet dataSet;
+    private final List<GenericLayer> layers = new LinkedList<GenericLayer>();
 
-    public abstract DataSet Forward(final DataSet input);
+    public Network() {
 
-    public abstract DataSet Backward(final DataSet y);
+    }
 
-    public abstract DataSet getCost(final DataSet input, final DataSet y);
+    public void addLayer(final GenericLayer layer) {
+        this.layers.add(layer);
+    }
+
+    public void Forward() {
+        this.layers.forEach(l -> l.forward(dataSet));
+    }
+
+    public abstract void Backward();
+
+    public abstract void getCost();
 
 
 }

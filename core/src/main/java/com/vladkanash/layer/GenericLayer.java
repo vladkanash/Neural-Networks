@@ -1,5 +1,7 @@
 package com.vladkanash.layer;
 
+import com.vladkanash.network.DataSet;
+
 /**
  * Created by vladk on 12.04.2017.
  */
@@ -12,6 +14,8 @@ public abstract class GenericLayer {
         this.inputWidth = inputWidth;
         this.outputWidth = outputWidth;
     }
+
+    public abstract void forward(final DataSet dataSet);
 
     public int getInputWidth() {
         return inputWidth;
