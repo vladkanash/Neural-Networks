@@ -24,7 +24,7 @@ public class DataSetTest {
 
     @Test
     public void mergeTest() {
-        dataSet.merge(new DataSet(new double[] {2.0, 9.0, 0.0, -1.0, 20.0}, dataSet.getDimension()));
+        dataSet.merge(new DataSet(new double[] {2.0, 9.0, 0.0, -1.0, 20.0}, dataSet.getDimension()), (a, b) -> a + b);
         Assert.assertArrayEquals(dataSet.getArrayData(), new double[] {4.0, 12.0, 5.0, 5.0, 27.0}, 0.0001);
     }
 

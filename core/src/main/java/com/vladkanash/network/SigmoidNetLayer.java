@@ -12,10 +12,10 @@ public class SigmoidNetLayer extends SimpleFunctionNetLayer {
     }
 
     @Override
-    void backward(final DataSet deltas, final DataSet y) {
-        deltas.update(new DataSet(
+    void backward(final DataSet deltas, final DataSet childrenWeights) {
+        deltas.merge(new DataSet(
                 outputs.getStreamData().map(e -> -e * (1 - e)).toArray(),
-                deltas.getDimension()));
+                this.deltas.getDimension()), (a, b) -> a * b);
         this.deltas.update(deltas);
     }
 }

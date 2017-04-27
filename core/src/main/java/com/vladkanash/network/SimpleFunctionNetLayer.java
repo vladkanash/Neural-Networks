@@ -14,7 +14,7 @@ abstract class SimpleFunctionNetLayer extends NetLayer {
     private final UnaryOperator<Double> forwardFunction;
 
     SimpleFunctionNetLayer(final UnaryOperator<Double> forwardFunction,
-            final LayerDimensions dimensions) {
+                           final LayerDimensions dimensions) {
         super(dimensions);
         Validate.notNull(forwardFunction, "operator must not be null");
         this.forwardFunction = forwardFunction;

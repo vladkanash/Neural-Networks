@@ -27,6 +27,7 @@ class FullyConnectedNetLayer extends NetLayer {
 
     @Override
     void forward(DataSet dataSet) {
+        this.outputs.update(dataSet);
         Validate.isTrue(dataSet.getSize() == getInputSize(),
                 "size of dataset must be valid");
         Validate.isTrue(dataSet.getSize() == getWeights().getDimension().getWidth(),
@@ -34,26 +35,32 @@ class FullyConnectedNetLayer extends NetLayer {
 
         final DataSet result = mathOperations.forwardLayer(getWeights(), dataSet);
         dataSet.update(result);
-        this.outputs.update(result);
     }
 
     @Override
-    void backward(final DataSet deltas, final DataSet y) {
-        if (lastLayer) {
-            final double[] layerDeltas = new double[deltas.getSize()];
-            Arrays.setAll(layerDeltas, i ->
-                    (deltas.get(i) == 0 ? 1 : deltas.get(i)) * (y.get(i) - outputs.get(i)));
-            deltas.update(new DataSet(layerDeltas, deltas.getDimension()));
-        } else {
-            Validate.isTrue(deltas.getSize() == getWeights().getDimension().getHeight(),
-                    "Dimensions must match");
-            final DataSet result = mathOperations.backwardLayer(this.getWeights(), deltas);
-            deltas.update(result);
-        }
+    void backward(final DataSet deltas, final DataSet childremWeights) {
+        Validate.isTrue(deltas.getSize() == getWeights().getDimension().getHeight(),
+                "Dimensions must match");
+        final DataSet result = mathOperations.backwardLayer(childremWeights, deltas);
+        deltas.update(result);
         this.deltas.update(deltas);
 
         //update weights here
-        getWeights().merge(mathOperations.outerProduct(this.deltas, this.outputs));
+        getWeights().merge(mathOperations.outerProduct(this.deltas, this.outputs), (a, b) -> a + b);
+
+        //TODO apply nu parameter here
+    }
+
+    @Override
+    void lastLayerBackward(final DataSet deltas, final DataSet y, final DataSet outputs) {
+        final double[] layerDeltas = new double[deltas.getSize()];
+        Arrays.setAll(layerDeltas, i ->
+                (deltas.get(i) == 0 ? 1 : deltas.get(i)) * (y.get(i) - outputs.get(i)));
+        deltas.update(new DataSet(layerDeltas, deltas.getDimension()));
+
+        this.deltas.update(deltas);
+        //update weights here
+        getWeights().merge(mathOperations.outerProduct(this.deltas, this.outputs), (a, b) -> a + b);
 
         //TODO apply nu parameter here
     }

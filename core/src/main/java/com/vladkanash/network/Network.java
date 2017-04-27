@@ -27,9 +27,6 @@ public class Network {
     public void addLayer(final Layer layer) {
         Validate.notNull(layer, "layer must not be null");
 
-        if (getTopLayer() != null) {
-            getTopLayer().setLastLayer(false);
-        }
         NetLayer newLayer = null;
         switch(layer.getType()) {
             case RELU: {
@@ -66,12 +63,30 @@ public class Network {
         return dataSet.getWrapperArrayData();
     }
 
-    void backward(final DataSet y) {
-        final Iterator<NetLayer> iter = layers.descendingIterator();
-        final DataSet deltas = new DataSet(y.getDimension());
+    public DataSet forward(final DataSet data) {
+        if (layers.isEmpty()) {
+            throw new IllegalStateException("Cannot call forward() on empty network");
+        }
+        final DataSet dataSet = new DataSet(data);
+        this.layers.forEach(l -> l.forward(dataSet));
+        return dataSet;
+    }
 
+    void backward(final DataSet y, final DataSet outputs) {
+        final Iterator<NetLayer> iter = layers.descendingIterator();
+        final DataSet deltas = new DataSet(y.getDimension(), () -> 1);
+
+        boolean lastLayer = true;
+        FullyConnectedNetLayer lastFullyConn = null;
         while (iter.hasNext()) {
-            iter.next().backward(deltas, y);
+            final NetLayer layer = iter.next();
+            if (lastLayer && layer instanceof FullyConnectedNetLayer) {
+                layer.lastLayerBackward(deltas, y, outputs);
+                lastLayer = false;
+            } else {
+                layer.backward(deltas, lastFullyConn != null ? lastFullyConn.getWeights() : null);
+            }
+            lastFullyConn = layer instanceof  FullyConnectedNetLayer ? (FullyConnectedNetLayer) layer : lastFullyConn;
         }
     }
 
@@ -88,7 +103,7 @@ public class Network {
     }
 
     private Dimension getTopDimension() {
-        return layers.isEmpty() ? inputDimension : layers.get(0).getLayerDimensions().getOutputDimension();
+        return layers.isEmpty() ? inputDimension : layers.getLast().getLayerDimensions().getOutputDimension();
     }
 
     private NetLayer getTopLayer() {

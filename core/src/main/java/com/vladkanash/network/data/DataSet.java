@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.DoubleBinaryOperator;
+import java.util.function.DoubleSupplier;
 import java.util.function.DoubleUnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
@@ -56,25 +58,24 @@ public class DataSet {
     }
 
     /**
-     * Creates a DataSet filled with 0's for a given dimension.
+     * Creates a DataSet filled with supplier provided values for a given dimension.
      * @param dimension dimension
      */
-    public DataSet(final Dimension dimension) {
-        this(DoubleStream.generate(() -> 0)
-                .limit(dimension.getSize()).toArray(), dimension);
+    public DataSet(final Dimension dimension, final DoubleSupplier supplier) {
+        this(DoubleStream.generate(supplier).limit(dimension.getSize()).toArray(), dimension);
     }
 
     public void update(final DoubleUnaryOperator operator) {
         this.data.replaceAll(operator::applyAsDouble);
     }
 
-    public void merge(final DataSet other) {
-        Validate.isTrue(this.getDimension().equals(other.getDimension()),
+    public void merge(final DataSet other, final DoubleBinaryOperator operator) {
+        Validate.isTrue(this.getDimension().getSize() == other.getDimension().getSize(),
                 "Dimensions must match");
 
         final double[] dataArray = getArrayData();
         final double[] otherArray = other.getArrayData();
-        Arrays.setAll(dataArray, i -> dataArray[i] + otherArray[i]);
+        Arrays.setAll(dataArray, i -> operator.applyAsDouble(dataArray[i], otherArray[i]));
         this.data.clear();
         this.data.addAll(Arrays.stream(dataArray).boxed().collect(Collectors.toList()));
     }

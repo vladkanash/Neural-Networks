@@ -32,7 +32,6 @@ public class FullyConnectedNetLayerTest {
 
     @Test
     public void notLastLayerBackwardTest() throws Exception {
-        this.layer.setLastLayer(false);
         final DataSet deltas = new DataSet(new double[] {1.0, 2.0, 3.0, 4.0}, new Dimension(1, 1,4));
         final DataSet y = new DataSet(new double[] {1.0, 1.0, 0.0, 0.0}, new Dimension(1, 1, 4));
         layer.backward(deltas, y);
