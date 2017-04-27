@@ -1,6 +1,6 @@
 package com.vladkanash.api.layers;
 
-import com.vladkanash.network.Dimension;
+import com.vladkanash.network.data.Dimension;
 import org.apache.commons.lang3.Validate;
 
 /**

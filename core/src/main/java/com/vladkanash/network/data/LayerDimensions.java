@@ -1,4 +1,4 @@
-package com.vladkanash.network;
+package com.vladkanash.network.data;
 
 import org.apache.commons.lang3.Validate;
 

@@ -1,7 +1,7 @@
 package com.vladkanash.network.util;
 
-import com.vladkanash.network.DataSet;
-import com.vladkanash.network.Dimension;
+import com.vladkanash.network.data.DataSet;
+import com.vladkanash.network.data.Dimension;
 import org.apache.commons.lang3.Validate;
 
 import java.util.Random;
