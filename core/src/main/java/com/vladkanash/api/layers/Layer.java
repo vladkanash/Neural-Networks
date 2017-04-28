@@ -1,5 +1,7 @@
 package com.vladkanash.api.layers;
 
+import java.util.function.DoubleUnaryOperator;
+
 import com.vladkanash.network.data.Dimension;
 import org.apache.commons.lang3.Validate;
 
@@ -10,14 +12,13 @@ public class Layer {
 
     public enum LayerType {
         CONVOLUTION,
-        FULLY_CONNECTED,
-        RELU,
-        SIGMOID
+        FULLY_CONNECTED
     }
 
     private int neuronCount;
     private Dimension filterSize;
     private LayerType type;
+    private ActivationFunction activationFunction;
 
     private Layer() {}
 
@@ -26,6 +27,7 @@ public class Layer {
         Validate.notNull(filterSize, "filter size must not be null");
         Validate.isTrue(neuronCount >= 0, "neuron count cannot be negative");
 
+        this.activationFunction = ActivationFunction.IDENTITY;
         this.neuronCount = neuronCount;
         this.filterSize = filterSize;
         this.type = type;
@@ -39,8 +41,31 @@ public class Layer {
         this(type, 0, dimension);
     }
 
-    private Layer(final LayerType type) {
-        this(type, 0, Dimension.EMPTY);
+    public Layer withActivationFunction(final ActivationFunction function) {
+        Validate.notNull(function, "ActivationFunction must not be null");
+
+        this.activationFunction = activationFunction;
+        return this;
+    }
+
+    public Layer withSigmoidActivation() {
+        appendActivationFunction(ActivationFunction.SIGMOID);
+        return this;
+    }
+
+    public Layer withReLUActivation() {
+        appendActivationFunction(ActivationFunction.RELU);
+        return this;
+    }
+
+    private void appendActivationFunction(final ActivationFunction function) {
+        Validate.notNull(function, "function must not be null");
+        final DoubleUnaryOperator newForward = this.activationFunction.getForwardOperator()
+                .andThen(function.getForwardOperator());
+        final DoubleUnaryOperator newBackward = this.activationFunction.getBackwardOperator()
+                .andThen(function.getBackwardOperator());
+
+        this.activationFunction = new ActivationFunction(newForward, newBackward);
     }
 
     public int getNeuronCount() {
@@ -53,14 +78,6 @@ public class Layer {
 
     public LayerType getType() {
         return type;
-    }
-
-    public static Layer ReLU() {
-        return new Layer(LayerType.RELU);
-    }
-
-    public static Layer sigmoid() {
-        return new Layer(LayerType.SIGMOID);
     }
 
     public static Layer conv(final Dimension dimension) {

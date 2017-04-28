@@ -1,5 +1,6 @@
 package com.vladkanash.network;
 
+import com.vladkanash.api.layers.ActivationFunction;
 import com.vladkanash.api.layers.Layer;
 import com.vladkanash.network.data.DataSet;
 import com.vladkanash.network.data.Dimension;
@@ -18,10 +19,8 @@ public class TrainerTest {
     @Test
     public void trainSingleTest() throws Exception {
         final Network network = new Network(new Dimension(2));
-        network.addLayer(Layer.fullyConn(4));
-        network.addLayer(Layer.sigmoid());
-        network.addLayer(Layer.fullyConn(1));
-        network.addLayer(Layer.sigmoid());
+        network.addLayer(Layer.fullyConn(4).withSigmoidActivation());
+        network.addLayer(Layer.fullyConn(1).withSigmoidActivation());
 
         final Double[] initialResult = network.forward(new Double[] {4.56, 9.03});
         Arrays.stream(initialResult).forEach(System.out::println);

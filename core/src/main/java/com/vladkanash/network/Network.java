@@ -29,14 +29,14 @@ public class Network {
 
         NetLayer newLayer = null;
         switch(layer.getType()) {
-            case RELU: {
-                newLayer = NetLayerFactory.ReLU(getTopDimension());
-                break;
-            }
-            case SIGMOID: {
-                newLayer = NetLayerFactory.sigmoid(getTopDimension());
-                break;
-            }
+//            case RELU: {
+//                newLayer = NetLayerFactory.ReLU(getTopDimension());
+//                break;
+//            }
+//            case SIGMOID: {
+//                newLayer = NetLayerFactory.sigmoid(getTopDimension());
+//                break;
+//            }
             case FULLY_CONNECTED: {
                 final Dimension inputDim = getTopDimension();
                 newLayer = new FullyConnectedNetLayer(layer.getNeuronCount(), inputDim);
