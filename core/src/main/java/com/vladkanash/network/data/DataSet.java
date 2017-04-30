@@ -65,11 +65,12 @@ public class DataSet {
         this(DoubleStream.generate(supplier).limit(dimension.getSize()).toArray(), dimension);
     }
 
-    public void update(final DoubleUnaryOperator operator) {
+    public DataSet update(final DoubleUnaryOperator operator) {
         this.data.replaceAll(operator::applyAsDouble);
+        return this;
     }
 
-    public void merge(final DataSet other, final DoubleBinaryOperator operator) {
+    public DataSet merge(final DataSet other, final DoubleBinaryOperator operator) {
         Validate.isTrue(this.getDimension().getSize() == other.getDimension().getSize(),
                 "Dimensions must match");
 
@@ -78,6 +79,7 @@ public class DataSet {
         Arrays.setAll(dataArray, i -> operator.applyAsDouble(dataArray[i], otherArray[i]));
         this.data.clear();
         this.data.addAll(Arrays.stream(dataArray).boxed().collect(Collectors.toList()));
+        return this;
     }
 
     public List<Double> getData() {
@@ -100,17 +102,18 @@ public class DataSet {
         return dimension;
     }
 
-    public void update(final List<Double> data, final Dimension dimension) {
+    public DataSet update(final List<Double> data, final Dimension dimension) {
         Validate.notNull(dimension, "dimension must not be null");
         Validate.notNull(data, "data must not be null");
         Validate.isTrue(data.size() == dimension.getSize(), "data size must match dimension");
         this.data.clear();
         this.data.addAll(data);
         this.dimension = dimension;
+        return this;
     }
 
-    public void update(final DataSet dataSet) {
-        update(dataSet.getData(), dataSet.getDimension());
+    public DataSet update(final DataSet dataSet) {
+        return update(dataSet.getData(), dataSet.getDimension());
     }
 
     public double[][] get2DArrayData() {

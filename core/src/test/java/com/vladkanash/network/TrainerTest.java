@@ -1,14 +1,12 @@
 package com.vladkanash.network;
 
-import com.vladkanash.api.layers.ActivationFunction;
 import com.vladkanash.api.layers.Layer;
 import com.vladkanash.network.data.DataSet;
 import com.vladkanash.network.data.Dimension;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by vladk on 27.04.2017.
@@ -28,11 +26,12 @@ public class TrainerTest {
         final Trainer trainer = new Trainer(network);
         for (int i = 0; i < 300; i++) {
             trainer.trainSingle(new DataSet(new Double[]{4.56, 9.03}, new Dimension(2)),
-                                new DataSet(new Double[]{0.8}, new Dimension(1)));
+                                new DataSet(new Double[]{0.1}, new Dimension(1)));
         }
 
         final Double[] newResult = network.forward(new Double[] {4.56, 9.03});
         Arrays.stream(newResult).forEach(System.out::println);
+        Assert.assertTrue(initialResult[0] > newResult[0]);
     }
 
 }

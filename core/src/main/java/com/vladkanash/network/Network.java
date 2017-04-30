@@ -29,17 +29,9 @@ public class Network {
 
         NetLayer newLayer = null;
         switch(layer.getType()) {
-//            case RELU: {
-//                newLayer = NetLayerFactory.ReLU(getTopDimension());
-//                break;
-//            }
-//            case SIGMOID: {
-//                newLayer = NetLayerFactory.sigmoid(getTopDimension());
-//                break;
-//            }
             case FULLY_CONNECTED: {
                 final Dimension inputDim = getTopDimension();
-                newLayer = new FullyConnectedNetLayer(layer.getNeuronCount(), inputDim);
+                newLayer = new FullyConnectedNetLayer(layer.getNeuronCount(), inputDim, layer.getActivationFunction());
                 break;
             }
             case CONVOLUTION: {
@@ -76,17 +68,15 @@ public class Network {
         final Iterator<NetLayer> iter = layers.descendingIterator();
         final DataSet deltas = new DataSet(y.getDimension(), () -> 1);
 
-        boolean lastLayer = true;
-        FullyConnectedNetLayer lastFullyConn = null;
+        FullyConnectedNetLayer lastLayer = null;
         while (iter.hasNext()) {
             final NetLayer layer = iter.next();
-            if (lastLayer && layer instanceof FullyConnectedNetLayer) {
+            if (lastLayer == null) {
                 layer.lastLayerBackward(deltas, y, outputs);
-                lastLayer = false;
             } else {
-                layer.backward(deltas, lastFullyConn != null ? lastFullyConn.getWeights() : null);
+                layer.backward(deltas, lastLayer.getWeights());
             }
-            lastFullyConn = layer instanceof  FullyConnectedNetLayer ? (FullyConnectedNetLayer) layer : lastFullyConn;
+            lastLayer = (FullyConnectedNetLayer) layer;
         }
     }
 

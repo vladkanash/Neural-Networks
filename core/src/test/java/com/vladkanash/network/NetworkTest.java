@@ -26,15 +26,14 @@ public class NetworkTest {
 
     @Test
     public void networkTest() {
-        network.addLayer(Layer.ReLU());
+        network.addLayer(Layer.fullyConn(5).withReLUActivation());
         final Double[] result = network.forward(new Double[] {1.9, -2.8, 3.7, -4.6, 5.5, -6.4, 7.3, 1.4});
         Assert.assertTrue(Arrays.stream(result).noneMatch(e -> e < 0));
     }
 
     @Test
     public void outputDimensionTest() {
-        network.addLayer(Layer.fullyConn(10));
-        network.addLayer(Layer.sigmoid());
+        network.addLayer(Layer.fullyConn(10).withSigmoidActivation());
         final Double[] result = network.forward(new Double[] {1.9, -2.8, 3.7, -4.6, 5.5, -6.4, 7.3, 9.9});
         Assert.assertEquals(10, result.length);
     }

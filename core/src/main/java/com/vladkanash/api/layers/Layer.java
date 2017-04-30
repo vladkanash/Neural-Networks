@@ -80,6 +80,10 @@ public class Layer {
         return type;
     }
 
+    public ActivationFunction getActivationFunction() {
+        return this.activationFunction;
+    }
+
     public static Layer conv(final Dimension dimension) {
         return new Layer(LayerType.CONVOLUTION, dimension);
     }
