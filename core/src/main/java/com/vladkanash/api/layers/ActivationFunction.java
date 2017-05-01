@@ -15,8 +15,9 @@ public class ActivationFunction {
                     e -> e > 0 ? e : 0,
                     e -> e > 0 ? 1 : 0);
 
+    //TODO remove this !!! (make sigmoid by default)
     public static final ActivationFunction IDENTITY = new ActivationFunction(
-                    DoubleUnaryOperator.identity(), DoubleUnaryOperator.identity());
+                    e -> e, e -> e);
 
     public ActivationFunction(
             final DoubleUnaryOperator forwardOperator,

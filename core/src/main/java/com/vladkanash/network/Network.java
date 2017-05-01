@@ -35,6 +35,7 @@ public class Network {
                 break;
             }
             case CONVOLUTION: {
+                final Dimension inputDim = getTopDimension();
                 break;
             }
             default: {
@@ -68,7 +69,7 @@ public class Network {
         final Iterator<NetLayer> iter = layers.descendingIterator();
         final DataSet deltas = new DataSet(y.getDimension(), () -> 1);
 
-        FullyConnectedNetLayer lastLayer = null;
+        NetLayer lastLayer = null;
         while (iter.hasNext()) {
             final NetLayer layer = iter.next();
             if (lastLayer == null) {
@@ -76,7 +77,7 @@ public class Network {
             } else {
                 layer.backward(deltas, lastLayer.getWeights());
             }
-            lastLayer = (FullyConnectedNetLayer) layer;
+            lastLayer = layer;
         }
     }
 

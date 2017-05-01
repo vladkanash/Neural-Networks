@@ -15,16 +15,15 @@ import org.apache.commons.lang3.Validate;
  */
 class FullyConnectedNetLayer extends NetLayer {
 
-    private final int neuronCount;
-    private final DataSet weights;
     private final MathOperations mathOperations = ApacheMathOperations.getInstance();
 
     FullyConnectedNetLayer(int neuronCount,
                            final Dimension inputDimension,
                            final ActivationFunction activationFunction) {
-        super(inputDimension, new Dimension(1, 1, neuronCount), activationFunction);
-        this.neuronCount = neuronCount;
-        this.weights = DataSetUtils.getRandomDataSet(new Dimension(getInputSize(), neuronCount));
+        super(inputDimension,
+                new Dimension(1, 1, neuronCount),
+                DataSetUtils.getRandomDataSet(new Dimension(inputDimension.getSize(), neuronCount)),
+                activationFunction);
     }
 
     @Override
@@ -76,13 +75,5 @@ class FullyConnectedNetLayer extends NetLayer {
 
     private int getOutputSize() {
         return this.getLayerDimensions().getOutputDimension().getSize();
-    }
-
-    int getNeuronCount() {
-        return neuronCount;
-    }
-
-    DataSet getWeights() {
-        return weights;
     }
 }

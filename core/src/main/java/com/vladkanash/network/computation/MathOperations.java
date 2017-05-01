@@ -12,4 +12,6 @@ public interface MathOperations {
     DataSet backwardLayer(final DataSet weights, final DataSet delta);
 
     DataSet outerProduct(final DataSet vectorA, final DataSet vectorB);
+
+    DataSet convolve(final DataSet kernel, final DataSet input);
 }

@@ -140,6 +140,12 @@ public class DataSet {
         return data.get(idx);
     }
 
+    public void set(int widthIdx, int heightIdx, int depthIdx, double value) {
+        int idx = dimension.getDepth() * dimension.getWidth() * heightIdx +
+                  dimension.getDepth() * widthIdx + depthIdx;
+        this.data.set(idx, value);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -18,6 +18,7 @@ public class TrainerTest {
     public void trainSingleTest() throws Exception {
         final Network network = new Network(new Dimension(2));
         network.addLayer(Layer.fullyConn(4).withSigmoidActivation());
+        network.addLayer(Layer.fullyConn(21).withSigmoidActivation());
         network.addLayer(Layer.fullyConn(1).withSigmoidActivation());
 
         final Double[] initialResult = network.forward(new Double[] {4.56, 9.03});
@@ -26,7 +27,7 @@ public class TrainerTest {
         final Trainer trainer = new Trainer(network);
         for (int i = 0; i < 300; i++) {
             trainer.trainSingle(new DataSet(new Double[]{4.56, 9.03}, new Dimension(2)),
-                                new DataSet(new Double[]{0.1}, new Dimension(1)));
+                                new DataSet(new Double[]{0.01}, new Dimension(1)));
         }
 
         final Double[] newResult = network.forward(new Double[] {4.56, 9.03});

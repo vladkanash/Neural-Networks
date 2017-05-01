@@ -3,7 +3,7 @@ package com.vladkanash.network.data;
 import org.apache.commons.lang3.Validate;
 
 /**
- * This class contains a dimension values for a 3-dimensional DataSet (width, height, depth)
+ * This class stores a dimension values for a 3-dimensional DataSet (width, height, depth)
  * Created by vladk on 22.04.2017.
  */
 public class Dimension {

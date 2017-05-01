@@ -10,33 +10,35 @@ import com.vladkanash.network.data.LayerDimensions;
  */
 abstract class NetLayer {
 
-    protected final LayerDimensions layerDimensions;
-    protected final DataSet deltas;
-    protected final DataSet prevOutputs;
-    protected final DataSet selfOutputs;
-    protected final ActivationFunction activationFunction;
+    final LayerDimensions layerDimensions;
+    final DataSet deltas;
+    final DataSet weights;
+    final DataSet prevOutputs;
+    final DataSet selfOutputs;
+    final ActivationFunction activationFunction;
 
     abstract void forward(final DataSet dataSet);
 
     abstract void backward(final DataSet deltas, final DataSet childrenWeights);
 
-    void lastLayerBackward(final DataSet deltas, final DataSet y, final DataSet outputs) {
-        throw new UnsupportedOperationException();
-    }
+    abstract void lastLayerBackward(final DataSet deltas, final DataSet y, final DataSet outputs);
 
     NetLayer(final Dimension inputDimension,
              final Dimension outputDimension,
+             final DataSet weights,
              final ActivationFunction activationFunction) {
-        this(new LayerDimensions(inputDimension, outputDimension), activationFunction);
+        this(new LayerDimensions(inputDimension, outputDimension), weights, activationFunction);
     }
 
     NetLayer(final LayerDimensions dimensions,
+             final DataSet weights,
              final ActivationFunction activationFunction) {
         this.layerDimensions = dimensions;
         this.deltas = new DataSet(dimensions.getOutputDimension(), () -> 1);
         this.prevOutputs = new DataSet(dimensions.getInputDimension(), () -> 0);
         this.selfOutputs = new DataSet(dimensions.getOutputDimension(), () -> 0);
         this.activationFunction = activationFunction;
+        this.weights = weights;
     }
 
     LayerDimensions getLayerDimensions() {
@@ -45,5 +47,21 @@ abstract class NetLayer {
 
     public ActivationFunction getActivationFunction() {
         return activationFunction;
+    }
+
+    DataSet getWeights() {
+        return weights;
+    }
+
+    DataSet getDeltas() {
+        return deltas;
+    }
+
+    DataSet getPrevOutputs() {
+        return prevOutputs;
+    }
+
+    DataSet getSelfOutputs() {
+        return selfOutputs;
     }
 }

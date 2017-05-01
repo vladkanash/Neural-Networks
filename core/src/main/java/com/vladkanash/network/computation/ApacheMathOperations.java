@@ -44,6 +44,23 @@ public class ApacheMathOperations implements MathOperations {
         return new DataSet(result.getData(), resultDimension);
     }
 
+    @Override
+    public DataSet convolve(DataSet kernel, DataSet input) {
+        final int inputWidth = input.getDimension().getWidth();
+        final int inputHeight = input.getDimension().getHeight();
+        final int inputDepth = input.getDimension().getDepth();
+
+        final int kernelWidth = kernel.getDimension().getWidth();
+        final int kernelHeight = kernel.getDimension().getHeight();
+        final int kernelDepth = input.getDimension().getDepth();
+
+        final int outputWidth = inputWidth - kernelWidth + 1;
+        final int outputHeight = inputHeight - kernelHeight + 1;
+        final int outputDepth = inputDepth - kernelDepth + 1;
+
+        return null;
+    }
+
     private DataSet multiply(final RealMatrix matrix, final DataSet vector) {
         final double[] result = matrix.operate(vector.getArrayData());
         final Dimension resultDimension = new Dimension(1, 1, matrix.getRowDimension());
