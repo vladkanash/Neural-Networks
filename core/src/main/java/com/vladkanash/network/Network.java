@@ -28,14 +28,14 @@ public class Network {
         Validate.notNull(layer, "layer must not be null");
 
         NetLayer newLayer = null;
+        final Dimension inputDim = getTopDimension();
         switch(layer.getType()) {
             case FULLY_CONNECTED: {
-                final Dimension inputDim = getTopDimension();
                 newLayer = new FullyConnectedNetLayer(layer.getNeuronCount(), inputDim, layer.getActivationFunction());
                 break;
             }
             case CONVOLUTION: {
-                final Dimension inputDim = getTopDimension();
+                newLayer = new ConvolutionLayer(inputDim, layer.getFilterSize(), layer.getActivationFunction());
                 break;
             }
             default: {

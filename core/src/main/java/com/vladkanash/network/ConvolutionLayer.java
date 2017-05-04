@@ -5,6 +5,7 @@ import com.vladkanash.network.computation.ApacheMathOperations;
 import com.vladkanash.network.computation.MathOperations;
 import com.vladkanash.network.data.DataSet;
 import com.vladkanash.network.data.Dimension;
+import com.vladkanash.network.util.DataSetUtils;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -15,10 +16,19 @@ public class ConvolutionLayer extends NetLayer {
     private final MathOperations mathOperations = ApacheMathOperations.getInstance();
 
     ConvolutionLayer(Dimension inputDimension,
-                     Dimension outputDimension,
-                     DataSet weights,
+                     Dimension weightsDimension,
                      ActivationFunction activationFunction) {
-        super(inputDimension, outputDimension, weights, activationFunction);
+        super(inputDimension, getOutputDimension(inputDimension, weightsDimension),
+                DataSetUtils.getRandomDataSet(weightsDimension), activationFunction);
+    }
+
+    private static Dimension getOutputDimension(final Dimension inputDim, final Dimension filterDim) {
+        Validate.isTrue(inputDim.getWidth() >= filterDim.getWidth());
+        Validate.isTrue(inputDim.getHeight() >= filterDim.getHeight());
+
+        return new Dimension(inputDim.getWidth() - filterDim.getWidth() + 1,
+                inputDim.getHeight() - filterDim.getHeight() + 1,
+                inputDim.getDepth() - filterDim.getDepth() + 1);
     }
 
     @Override
@@ -26,7 +36,9 @@ public class ConvolutionLayer extends NetLayer {
         Validate.isTrue(dataSet.getDimension().equals(getLayerDimensions().getInputDimension()),
                 "DataSet must match input dimension");
 
-        mathOperations.
+        //TODO validations
+
+        dataSet.update(mathOperations.convolve(weights, dataSet));
     }
 
     @Override

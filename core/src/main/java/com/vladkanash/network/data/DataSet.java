@@ -140,6 +140,12 @@ public class DataSet {
         return data.get(idx);
     }
 
+    public double get(int widthIdx, int heightIdx, int depthIdx) {
+        int idx = dimension.getDepth() * dimension.getWidth() * heightIdx +
+                dimension.getDepth() * widthIdx + depthIdx;
+        return data.get(idx);
+    }
+
     public void set(int widthIdx, int heightIdx, int depthIdx, double value) {
         int idx = dimension.getDepth() * dimension.getWidth() * heightIdx +
                   dimension.getDepth() * widthIdx + depthIdx;

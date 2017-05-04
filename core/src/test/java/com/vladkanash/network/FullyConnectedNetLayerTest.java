@@ -6,6 +6,7 @@ import com.vladkanash.api.layers.ActivationFunction;
 import com.vladkanash.network.data.DataSet;
 import com.vladkanash.network.data.Dimension;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;;
 import org.mockito.Mockito;
@@ -24,6 +25,7 @@ public class FullyConnectedNetLayerTest {
                                                               2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0,
                                                               2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0};
 
+    @Before
     public void setup() {
         this.layer = new FullyConnectedNetLayer(4,
                 new Dimension(2, 2, 2), ActivationFunction.IDENTITY);

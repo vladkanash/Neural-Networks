@@ -6,6 +6,9 @@ import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by vladk on 23.04.2017.
  */
@@ -45,7 +48,7 @@ public class ApacheMathOperations implements MathOperations {
     }
 
     @Override
-    public DataSet convolve(DataSet kernel, DataSet input) {
+    public DataSet convolve(final DataSet kernel, final DataSet input) {
         final int inputWidth = input.getDimension().getWidth();
         final int inputHeight = input.getDimension().getHeight();
         final int inputDepth = input.getDimension().getDepth();
@@ -56,9 +59,32 @@ public class ApacheMathOperations implements MathOperations {
 
         final int outputWidth = inputWidth - kernelWidth + 1;
         final int outputHeight = inputHeight - kernelHeight + 1;
-        final int outputDepth = inputDepth - kernelDepth + 1;
+        final int outputDepth = 1;
 
-        return null;
+        final List<Double> result = new ArrayList<>(outputDepth * outputHeight * outputWidth);
+
+        for (int z = 0; z < outputDepth; z++) {
+            for (int y = 0; y < outputHeight; y++) {
+                for (int x = 0; x < outputWidth; x++) {
+                    double res = 0.0;
+
+                    for (int fx = 0; fx < kernelWidth; fx++) {
+                        int ox = x + fx;
+                        for (int fy = 0; fy < kernelHeight; fy++) {
+                            int oy = y + fy;
+
+                            if (ox < inputWidth && oy < inputHeight) {
+                                for (int fd = 0; fd < kernelDepth; fd++) {
+                                    res += kernel.get(fx, fy, fd) * input.get(ox, oy, fd);
+                                }
+                            }
+                        }
+                    }
+                    result.add(res);
+                }
+            }
+        }
+        return new DataSet(result, new Dimension(outputWidth, outputHeight, outputDepth));
     }
 
     private DataSet multiply(final RealMatrix matrix, final DataSet vector) {
