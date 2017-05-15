@@ -25,6 +25,8 @@ public class ConvolutionLayer extends NetLayer {
     private static Dimension getOutputDimension(final Dimension inputDim, final Dimension filterDim) {
         Validate.isTrue(inputDim.getWidth() >= filterDim.getWidth());
         Validate.isTrue(inputDim.getHeight() >= filterDim.getHeight());
+        Validate.isTrue(inputDim.getDepth() == filterDim.getDepth(),
+                "Filter depth must match input depth");
 
         return new Dimension(inputDim.getWidth() - filterDim.getWidth() + 1,
                 inputDim.getHeight() - filterDim.getHeight() + 1,
@@ -35,9 +37,6 @@ public class ConvolutionLayer extends NetLayer {
     void forward(DataSet dataSet) {
         Validate.isTrue(dataSet.getDimension().equals(getLayerDimensions().getInputDimension()),
                 "DataSet must match input dimension");
-
-        //TODO validations
-
         dataSet.update(mathOperations.convolve(weights, dataSet));
     }
 
