@@ -7,9 +7,6 @@ import org.apache.commons.lang3.Validate;
 
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.stream.Collectors;
 
 /**
  * Created by vladk on 13.04.2017.
@@ -35,7 +32,7 @@ public class Network {
                 break;
             }
             case CONVOLUTION: {
-                newLayer = new ConvolutionLayer(inputDim, layer.getFilterSize(), layer.getActivationFunction());
+                newLayer = new ConvolutionNetLayer(inputDim, layer.getFilterSize(), layer.getActivationFunction());
                 break;
             }
             default: {

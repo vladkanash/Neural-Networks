@@ -28,4 +28,11 @@ public class DataSetTest {
         Assert.assertArrayEquals(dataSet.getArrayData(), new double[] {4.0, 12.0, 5.0, 5.0, 27.0}, 0.0001);
     }
 
+    @Test
+    public void rotateTest() {
+        DataSet dataSet = new DataSet(new double[][] {{1.0, 2.0, 15.0}, {3.0, 4.0, 0.04}, {12.76, 0.11, 5.0}}, new Dimension(3, 3));
+        final DataSet result = dataSet.rotate();
+        Assert.assertEquals(5.0, result.get(0), 0);
+    }
+
 }

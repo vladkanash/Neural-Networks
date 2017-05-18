@@ -64,16 +64,20 @@ public class ApacheMathOperations implements MathOperations {
         final List<Double> result = new ArrayList<>(outputDepth * outputHeight * outputWidth);
 
         for (int z = 0; z < outputDepth; z++) {
-            for (int y = 0; y < outputHeight; y++) {
-                for (int x = 0; x < outputWidth; x++) {
+            int ay = -kernelHeight + 1;
+            for (int y = 0; y < outputHeight; y++, ay++) {
+                int ax = -kernelWidth + 1;
+                for (int x = 0; x < outputWidth; x++, ax++) {
                     double res = 0.0;
 
-                    for (int fx = 0; fx < kernelWidth; fx++) {
-                        int ox = x + fx;
-                        for (int fy = 0; fy < kernelHeight; fy++) {
-                            int oy = y + fy;
 
-                            if (ox < inputWidth && oy < inputHeight) {
+
+                    for (int fx = 0; fx < kernelWidth; fx++) {
+                        int ox = ax + fx;
+                        for (int fy = 0; fy < kernelHeight; fy++) {
+                            int oy = ay + fy;
+
+                            if (oy >= 0 && oy < inputHeight && ox >= 0 && ox < inputWidth) {
                                 for (int fd = 0; fd < kernelDepth; fd++) {
                                     res += kernel.get(fx, fy, fd) * input.get(ox, oy, fd);
                                 }

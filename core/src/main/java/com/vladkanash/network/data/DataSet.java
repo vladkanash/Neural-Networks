@@ -116,6 +116,25 @@ public class DataSet {
         return update(dataSet.getData(), dataSet.getDimension());
     }
 
+    /**
+     * Rotates dataset (used in convolution layer backpropagation)
+     */
+    public DataSet rotate() {
+        final int width = dimension.getWidth();
+        final int height = dimension.getHeight();
+        final int depth = dimension.getDepth();
+        final DataSet result = new DataSet(this);
+
+        for (int k = 0; k < depth; k++) {
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    result.set(j, i, k, this.get(width - 1 - j, height - 1 - i, k));
+                }
+            }
+        }
+        return result;
+    }
+
     public double[][] get2DArrayData() {
         Validate.isTrue(dimension.getDepth() <= 1, "cannot get 2D data with 3 dimensions");
         Validate.isTrue(dimension.getSize() == data.size(), "data size must match dimension");
