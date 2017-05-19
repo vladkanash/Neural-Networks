@@ -8,7 +8,7 @@ import com.vladkanash.network.data.LayerDimensions;
 /**
  * Created by vladk on 12.04.2017.
  */
-abstract class NetLayer {
+public abstract class NetLayer {
 
     final LayerDimensions layerDimensions;
     final DataSet deltas;

@@ -27,4 +27,10 @@ public class ConvolutionNetLayerTest {
         Assert.assertEquals(expected, dataSet.getDimension());
     }
 
+    @Test
+    public void backward() throws Exception {
+
+    }
+
+
 }

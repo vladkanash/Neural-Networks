@@ -1,5 +1,7 @@
 package com.vladkanash.network;
 
+import java.util.Arrays;
+
 import com.vladkanash.api.layers.ActivationFunction;
 import com.vladkanash.network.computation.ApacheMathOperations;
 import com.vladkanash.network.computation.MathOperations;
@@ -35,28 +37,37 @@ public class ConvolutionNetLayer extends NetLayer {
 
     @Override
     void forward(DataSet dataSet) {
+        this.prevOutputs.update(dataSet);
         Validate.isTrue(dataSet.getDimension().equals(getLayerDimensions().getInputDimension()),
                 "DataSet must match input dimension");
         dataSet.update(mathOperations.convolve(weights, dataSet));
+        this.selfOutputs.update(dataSet);
         dataSet.update(this.activationFunction.getForwardOperator());
     }
 
     @Override
     void backward(DataSet deltas, DataSet childrenWeights) {
-        final DataSet rotatedWeights = childrenWeights.rotate();
-
-        final DataSet result = mathOperations.convolve(rotatedWeights, deltas);
+        final DataSet result = mathOperations.convolve(childrenWeights.rotate(), deltas);
         final DataSet activationGrad = new DataSet(selfOutputs)
                 .update(this.activationFunction.getBackwardOperator());
 
         deltas.update(result.merge(activationGrad, (a, b) -> a * b));
         this.deltas.update(deltas);
 
-        getWeights().merge(mathOperations.outerProduct(this.deltas, this.prevOutputs), (a, b) -> a + b);
+        getWeights().merge(mathOperations.convolve(this.deltas, this.prevOutputs.rotate()), (a, b) -> a + b);
     }
 
     @Override
     void lastLayerBackward(DataSet deltas, DataSet y, DataSet outputs) {
+        final double[] layerDeltas = new double[deltas.getSize()];
+        Arrays.setAll(layerDeltas, i ->
+                this.activationFunction.getBackwardOperator().applyAsDouble(outputs.get(i)) * (y.get(i) - outputs.get(i)));
+        deltas.update(new DataSet(layerDeltas, deltas.getDimension()));
 
+        this.deltas.update(deltas);
+        //update weights here
+        getWeights().merge(mathOperations.outerProduct(this.deltas, this.prevOutputs), (a, b) -> a + b);
+
+        //TODO apply nu parameter here
     }
 }

@@ -13,7 +13,7 @@ import org.apache.commons.lang3.Validate;
 /**
  * Created by vladk on 22.04.2017.
  */
-class FullyConnectedNetLayer extends NetLayer {
+public class FullyConnectedNetLayer extends NetLayer {
 
     private final MathOperations mathOperations = ApacheMathOperations.getInstance();
 
@@ -36,8 +36,8 @@ class FullyConnectedNetLayer extends NetLayer {
 
         final DataSet result = mathOperations.forwardLayer(getWeights(), dataSet);
         dataSet.update(result);
-        dataSet.update(this.activationFunction.getForwardOperator());
         this.selfOutputs.update(dataSet);
+        dataSet.update(this.activationFunction.getForwardOperator());
     }
 
     @Override

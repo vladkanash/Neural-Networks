@@ -156,6 +156,7 @@ public class DataSet {
     }
 
     public double get(int idx) {
+        Validate.inclusiveBetween(0, data.size(), idx);
         return data.get(idx);
     }
 
@@ -168,6 +169,7 @@ public class DataSet {
     public void set(int widthIdx, int heightIdx, int depthIdx, double value) {
         int idx = dimension.getDepth() * dimension.getWidth() * heightIdx +
                   dimension.getDepth() * widthIdx + depthIdx;
+        Validate.inclusiveBetween(0, data.size(), idx);
         this.data.set(idx, value);
     }
 

@@ -30,8 +30,8 @@ public class FullyConnectedNetLayerTest {
         this.layer = new FullyConnectedNetLayer(4,
                 new Dimension(2, 2, 2), ActivationFunction.IDENTITY);
 
-        Mockito.when(layer.getWeights()).thenReturn(new DataSet(mockWeights, new Dimension(8, 4)));
-        Mockito.doNothing().when(layer).backward(Mockito.any(), Mockito.any());
+        //Mockito.when(layer.getWeights()).thenReturn(new DataSet(mockWeights, new Dimension(8, 4)));
+        //Mockito.doNothing().when(layer).backward(Mockito.any(), Mockito.any());
     }
 
     @Test
