@@ -1,5 +1,8 @@
 package com.vladkanash.network.computation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.vladkanash.network.data.DataSet;
 
 /**
@@ -13,5 +16,11 @@ public interface MathOperations {
 
     DataSet outerProduct(final DataSet vectorA, final DataSet vectorB);
 
-    DataSet convolve(final DataSet kernel, final DataSet input);
+    DataSet convolve(final List<DataSet> kernels, final DataSet input, final int padding);
+
+    default DataSet convolve(final DataSet kernel, final DataSet input, final int padding) {
+        final List<DataSet> kernels = new ArrayList<>();
+        kernels.add(kernel);
+        return this.convolve(kernels, input, padding);
+    }
 }

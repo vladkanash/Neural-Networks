@@ -1,5 +1,10 @@
 package com.vladkanash.network.computation;
 
+import javax.xml.crypto.Data;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import com.vladkanash.network.data.DataSet;
 import com.vladkanash.network.data.Dimension;
 import org.junit.Assert;
@@ -20,8 +25,24 @@ public class ApacheMathOperationsTest {
                 new Dimension(4, 3));
 
         final DataSet result = operations.forwardLayer(weights, input);
-        Assert.assertEquals(119.84, result.getData().get(0), 0.01);
-        Assert.assertEquals(74.31, result.getData().get(1), 0.01);
-        Assert.assertEquals(78.9, result.getData().get(2), 0.01);
+        Assert.assertEquals(119.84, result.getData().get(0), 0);
+        Assert.assertEquals(74.31, result.getData().get(1), 0);
+        Assert.assertEquals(78.9, result.getData().get(2), 0);
     }
+
+    @Test
+    public void convolutionTest() {
+        final DataSet input = new DataSet(new Double[]{1.0, 2.0, 3.0, 1.0, 2.0, 3.0, 1.0, 2.0, 3.0, 1.0, 2.0, 3.0},
+                new Dimension(2, 2, 3));
+        final DataSet kernel = new DataSet(new Dimension(2, 2, 3), () -> 1.0);
+        final List<DataSet> kernels = new ArrayList<>();
+        for (int k = 0; k < 5; k++) {
+            kernels.add(kernel);
+        }
+
+        final DataSet result = operations.convolve(kernels, input, 0);
+        Assert.assertEquals(kernels.size(), result.getDimension().getDepth());
+        Assert.assertEquals(24.0, result.getData().get(0), 0.0);
+    }
+
 }

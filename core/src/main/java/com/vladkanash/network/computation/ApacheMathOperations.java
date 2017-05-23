@@ -48,29 +48,31 @@ public class ApacheMathOperations implements MathOperations {
     }
 
     @Override
-    public DataSet convolve(final DataSet kernel, final DataSet input) {
+    public DataSet convolve(final List<DataSet> kernels, final DataSet input, final int padding) {
         final int inputWidth = input.getDimension().getWidth();
         final int inputHeight = input.getDimension().getHeight();
         final int inputDepth = input.getDimension().getDepth();
 
-        final int kernelWidth = kernel.getDimension().getWidth();
-        final int kernelHeight = kernel.getDimension().getHeight();
-        final int kernelDepth = input.getDimension().getDepth();
+        final int kernelWidth = kernels.get(0).getDimension().getWidth();
+        final int kernelHeight = kernels.get(0).getDimension().getHeight();
+        final int kernelDepth = kernels.get(0).getDimension().getDepth();
+        final int kernelCount = kernels.size();
 
         final int outputWidth = inputWidth - kernelWidth + 1;
         final int outputHeight = inputHeight - kernelHeight + 1;
-        final int outputDepth = 1;
+        final int outputDepth = kernelCount;
 
         final List<Double> result = new ArrayList<>(outputDepth * outputHeight * outputWidth);
 
-        for (int z = 0; z < outputDepth; z++) {
-            int ay = -kernelHeight + 1;
-            for (int y = 0; y < outputHeight; y++, ay++) {
-                int ax = -kernelWidth + 1;
-                for (int x = 0; x < outputWidth; x++, ax++) {
+        int ay = -padding;
+        for (int y = 0; y < outputHeight; y++, ay++) {
+
+            int ax = -padding;
+            for (int x = 0; x < outputWidth; x++, ax++) {
+
+                for (DataSet kernel : kernels) {
+
                     double res = 0.0;
-
-
 
                     for (int fx = 0; fx < kernelWidth; fx++) {
                         int ox = ax + fx;
@@ -78,8 +80,9 @@ public class ApacheMathOperations implements MathOperations {
                             int oy = ay + fy;
 
                             if (oy >= 0 && oy < inputHeight && ox >= 0 && ox < inputWidth) {
-                                for (int fd = 0; fd < kernelDepth; fd++) {
-                                    res += kernel.get(fx, fy, fd) * input.get(ox, oy, fd);
+
+                                for (int z = 0; z < inputDepth; z++) {
+                                    res += kernel.get(fx, fy, z) * input.get(ox, oy, z);
                                 }
                             }
                         }

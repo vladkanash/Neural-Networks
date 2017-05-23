@@ -1,6 +1,8 @@
 package com.vladkanash.network;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import com.vladkanash.api.layers.ActivationFunction;
 import com.vladkanash.network.computation.ApacheMathOperations;
@@ -40,21 +42,21 @@ public class ConvolutionNetLayer extends NetLayer {
         this.prevOutputs.update(dataSet);
         Validate.isTrue(dataSet.getDimension().equals(getLayerDimensions().getInputDimension()),
                 "DataSet must match input dimension");
-        dataSet.update(mathOperations.convolve(weights, dataSet));
+        dataSet.update(mathOperations.convolve(weights, dataSet, 0));
         this.selfOutputs.update(dataSet);
         dataSet.update(this.activationFunction.getForwardOperator());
     }
 
     @Override
     void backward(DataSet deltas, DataSet childrenWeights) {
-        final DataSet result = mathOperations.convolve(childrenWeights.rotate(), deltas);
+        final DataSet result = mathOperations.convolve(childrenWeights.rotate(), deltas, 0);
         final DataSet activationGrad = new DataSet(selfOutputs)
                 .update(this.activationFunction.getBackwardOperator());
 
         deltas.update(result.merge(activationGrad, (a, b) -> a * b));
         this.deltas.update(deltas);
 
-        getWeights().merge(mathOperations.convolve(this.deltas, this.prevOutputs.rotate()), (a, b) -> a + b);
+        getWeights().merge(mathOperations.convolve(this.deltas, this.prevOutputs.rotate(), 0), (a, b) -> a + b);
     }
 
     @Override
