@@ -20,7 +20,8 @@ public class SoftmaxNetLayer extends NetLayer {
 
     @Override
     void forward(final DataSet dataSet) {
-
+        final double sum = dataSet.getStreamData().sum();
+        dataSet.update(e -> e / sum);
     }
 
     @Override
