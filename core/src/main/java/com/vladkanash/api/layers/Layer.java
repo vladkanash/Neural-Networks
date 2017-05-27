@@ -84,8 +84,8 @@ public class Layer {
         return this.activationFunction;
     }
 
-    public static Layer conv(final Dimension dimension) {
-        return new Layer(LayerType.CONVOLUTION, dimension);
+    public static Layer conv(final Dimension dimension, int kernelCount) {
+        return new Layer(LayerType.CONVOLUTION, kernelCount, dimension);
     }
 
     public static Layer fullyConn(int neuronCount) {

@@ -173,6 +173,21 @@ public class DataSet {
         this.data.set(idx, value);
     }
 
+    public DataSet getChannel(final int channel) {
+        Validate.isTrue(channel >= 0 && channel < this.getDimension().getDepth(),
+                "this should be a valid channel index");
+        final int channelSize = getDimension().getHeight() * getDimension().getWidth();
+        final double[] channelData = new double[channelSize];
+
+        final int channelCount = this.getDimension().getDepth();
+        for (int i = 0, j = 0; i < this.getSize(); i++) {
+            if (i % channelCount == channel) {
+                channelData[j++] = this.data.get(i);
+            }
+        }
+        return new DataSet(channelData, new Dimension(getDimension().getWidth(), getDimension().getHeight()));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -13,6 +13,8 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Collections;
+
 @RunWith(MockitoJUnitRunner.class)
 public class FullyConnectedNetLayerTest {
 
@@ -41,7 +43,7 @@ public class FullyConnectedNetLayerTest {
         final DataSet childrenWeights = new DataSet(
                 new double[] {1.0, 1.0, 0.0, 0.0, 1.5, 0.4, 9.8, 1.1}, new Dimension(4, 2, 1));
 
-        layer.backward(deltas, childrenWeights);
+        layer.backward(deltas, Collections.singletonList(childrenWeights));
 
         Assert.assertEquals(4, deltas.getSize());
     }

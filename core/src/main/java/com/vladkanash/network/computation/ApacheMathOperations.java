@@ -58,8 +58,8 @@ public class ApacheMathOperations implements MathOperations {
         final int kernelDepth = kernels.get(0).getDimension().getDepth();
         final int kernelCount = kernels.size();
 
-        final int outputWidth = inputWidth - kernelWidth + 1;
-        final int outputHeight = inputHeight - kernelHeight + 1;
+        final int outputWidth = inputWidth - kernelWidth + 1 + padding * 2;
+        final int outputHeight = inputHeight - kernelHeight + 1 + padding * 2;
         final int outputDepth = kernelCount;
 
         final List<Double> result = new ArrayList<>(outputDepth * outputHeight * outputWidth);

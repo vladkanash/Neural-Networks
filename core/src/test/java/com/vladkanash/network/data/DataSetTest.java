@@ -78,4 +78,15 @@ public class DataSetTest {
     public void setErrorTest2() {
         dataSet.set(13, 2, 0, 4.5);
     }
+
+    @Test
+    public void getChannelTest() {
+        final DataSet dataset = new DataSet(new Double[]{1.0, 2.0, 3.0, 1.0, 2.0, 3.0, 1.0, 2.0, 3.0, 1.0, 2.0, 3.0},
+                new Dimension(2, 2, 3));
+
+        final DataSet channel = dataset.getChannel(1);
+
+        Assert.assertEquals(new Dimension(2, 2), channel.getDimension());
+        Assert.assertEquals(2.0, channel.get(1), 0);
+    }
 }

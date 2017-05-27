@@ -3,6 +3,9 @@ package com.vladkanash.network;
 import com.vladkanash.api.layers.ActivationFunction;
 import com.vladkanash.network.data.DataSet;
 import com.vladkanash.network.data.Dimension;
+import com.vladkanash.network.util.DataSetUtils;
+
+import java.util.List;
 
 /**
  * Created by vladk on 07.05.2017.
@@ -13,9 +16,9 @@ public class SoftmaxNetLayer extends NetLayer {
     SoftmaxNetLayer(
             final Dimension inputDimension,
             final Dimension outputDimension,
-            final DataSet weights,
             final ActivationFunction activationFunction) {
-        super(inputDimension, outputDimension, weights, activationFunction);
+        super(inputDimension, outputDimension,
+                DataSetUtils.getRandomDataSetList(Dimension.EMPTY, 1), activationFunction);
     }
 
     @Override
@@ -25,7 +28,7 @@ public class SoftmaxNetLayer extends NetLayer {
     }
 
     @Override
-    void backward(final DataSet deltas, final DataSet childrenWeights) {
+    void backward(DataSet deltas, List<DataSet> childrenWeights) {
 
     }
 

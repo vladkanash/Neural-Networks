@@ -1,6 +1,7 @@
 package com.vladkanash.network;
 
 import java.util.Arrays;
+import java.util.List;
 
 import com.vladkanash.api.layers.ActivationFunction;
 import com.vladkanash.network.computation.MathOperations;
@@ -22,7 +23,7 @@ public class FullyConnectedNetLayer extends NetLayer {
                            final ActivationFunction activationFunction) {
         super(inputDimension,
                 new Dimension(1, 1, neuronCount),
-                DataSetUtils.getRandomDataSet(new Dimension(inputDimension.getSize(), neuronCount)),
+                DataSetUtils.getRandomDataSetList(new Dimension(inputDimension.getSize(), neuronCount), 1),
                 activationFunction);
     }
 
@@ -31,18 +32,18 @@ public class FullyConnectedNetLayer extends NetLayer {
         this.prevOutputs.update(dataSet);
         Validate.isTrue(dataSet.getSize() == getInputSize(),
                 "size of dataset must be valid");
-        Validate.isTrue(dataSet.getSize() == getWeights().getDimension().getWidth(),
+        Validate.isTrue(dataSet.getSize() == getWeights().get(0).getDimension().getWidth(),
                 "Dimensions must match");
 
-        final DataSet result = mathOperations.forwardLayer(getWeights(), dataSet);
+        final DataSet result = mathOperations.forwardLayer(getWeights().get(0), dataSet);
         dataSet.update(result);
         this.selfOutputs.update(dataSet);
         dataSet.update(this.activationFunction.getForwardOperator());
     }
 
     @Override
-    void backward(final DataSet deltas, final DataSet childrenWeights) {
-        final DataSet result = mathOperations.backwardLayer(childrenWeights, deltas);
+    void backward(final DataSet deltas, final List<DataSet> childrenWeights) {
+        final DataSet result = mathOperations.backwardLayer(childrenWeights.get(0), deltas);
         final DataSet activationGrad = new DataSet(selfOutputs)
                 .update(this.activationFunction.getBackwardOperator());
 
@@ -50,7 +51,7 @@ public class FullyConnectedNetLayer extends NetLayer {
         this.deltas.update(deltas);
 
         //update weights here
-        getWeights().merge(mathOperations.outerProduct(this.deltas, this.prevOutputs), (a, b) -> a + b);
+        getWeights().get(0).merge(mathOperations.outerProduct(this.deltas, this.prevOutputs), (a, b) -> a + b);
 
         //TODO apply nu parameter here
     }
@@ -64,7 +65,7 @@ public class FullyConnectedNetLayer extends NetLayer {
 
         this.deltas.update(deltas);
         //update weights here
-        getWeights().merge(mathOperations.outerProduct(this.deltas, this.prevOutputs), (a, b) -> a + b);
+        getWeights().get(0).merge(mathOperations.outerProduct(this.deltas, this.prevOutputs), (a, b) -> a + b);
 
         //TODO apply nu parameter here
     }

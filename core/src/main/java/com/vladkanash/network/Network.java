@@ -32,7 +32,7 @@ public class Network {
                 break;
             }
             case CONVOLUTION: {
-                newLayer = new ConvolutionNetLayer(inputDim, layer.getFilterSize(), layer.getActivationFunction());
+                newLayer = new ConvolutionNetLayer(inputDim, layer.getFilterSize(), layer.getNeuronCount(), layer.getActivationFunction());
                 break;
             }
             default: {

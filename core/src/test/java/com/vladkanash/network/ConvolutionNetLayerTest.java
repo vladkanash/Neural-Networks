@@ -16,6 +16,7 @@ public class ConvolutionNetLayerTest {
     private ConvolutionNetLayer layer = new ConvolutionNetLayer(
             new Dimension(10, 10, 3),
             new Dimension(3, 3, 3),
+            1,
             ActivationFunction.SIGMOID);
 
     @Test

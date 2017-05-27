@@ -33,7 +33,7 @@ public class NetworkTest {
 
     @Test
     public void outputDimensionTest() {
-        network.addLayer(Layer.conv(new Dimension(1,2, 2)).withSigmoidActivation());
+        network.addLayer(Layer.conv(new Dimension(1,2, 2), 1).withSigmoidActivation());
         network.addLayer(Layer.fullyConn(10).withSigmoidActivation());
         final Double[] result = network.forward(new Double[] {1.9, -2.8, 3.7, -4.6, 5.5, -6.4, 7.3, 9.9});
         Assert.assertEquals(10, result.length);

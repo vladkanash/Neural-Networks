@@ -45,4 +45,14 @@ public class ApacheMathOperationsTest {
         Assert.assertEquals(24.0, result.getData().get(0), 0.0);
     }
 
+    @Test
+    public void paddingConvolutionTest() {
+        final DataSet input = new DataSet(new Double[]{1.0, 2.0, 3.0, 1.0, 2.0, 3.0, 1.0, 2.0, 3.0, 1.0, 2.0, 3.0},
+                new Dimension(2, 2, 3));
+        final DataSet kernel = new DataSet(new Dimension(2, 2, 3), () -> 1.0);
+
+        final DataSet result = operations.convolve(kernel, input, 1);
+        System.out.println(result);
+    }
+
 }
