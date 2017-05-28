@@ -188,6 +188,18 @@ public class DataSet {
         return new DataSet(channelData, new Dimension(getDimension().getWidth(), getDimension().getHeight()));
     }
 
+    public DataSet expand(final int newDepth) {
+        Validate.isTrue(this.getDimension().getDepth() == 1);
+        Validate.isTrue(newDepth > 1);
+
+        final List<Double> newData = this.getStreamData()
+                .flatMap(e -> DoubleStream.generate(() -> e).limit(newDepth))
+                .boxed()
+                .collect(Collectors.toList());
+        this.dimension = new Dimension(this.getDimension().getWidth(), this.getDimension().getHeight(), newDepth);
+        return this.update(newData, this.dimension);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

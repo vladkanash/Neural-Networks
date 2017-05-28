@@ -89,4 +89,14 @@ public class DataSetTest {
         Assert.assertEquals(new Dimension(2, 2), channel.getDimension());
         Assert.assertEquals(2.0, channel.get(1), 0);
     }
+
+    @Test
+    public void expandTest() {
+        final DataSet dataSet = new DataSet(new Double[]{1.0, 2.0, 3.0, 5.0},
+                new Dimension(2, 2));
+
+        dataSet.expand(6);
+        Assert.assertEquals(6, dataSet.getDimension().getDepth());
+        Assert.assertEquals(3.0, dataSet.get(15), 0);
+    }
 }

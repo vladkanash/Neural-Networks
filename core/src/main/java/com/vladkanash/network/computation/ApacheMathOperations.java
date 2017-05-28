@@ -62,6 +62,10 @@ public class ApacheMathOperations implements MathOperations {
         final int outputHeight = inputHeight - kernelHeight + 1 + padding * 2;
         final int outputDepth = kernelCount;
 
+        if (kernels.size() == 1 && inputDepth > 1) {
+
+        }
+
         final List<Double> result = new ArrayList<>(outputDepth * outputHeight * outputWidth);
 
         int ay = -padding;

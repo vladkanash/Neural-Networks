@@ -19,6 +19,7 @@ public class TrainerTest {
         final Network network = new Network(new Dimension(3, 3));
         network.addLayer(Layer.conv(new Dimension(2, 2), 1).withSigmoidActivation());
         network.addLayer(Layer.conv(new Dimension(2,2), 2).withSigmoidActivation());
+        network.addLayer(Layer.conv(new Dimension(1, 1, 2), 2).withSigmoidActivation());
 
         final Double[] initialResult = network.forward(new Double[] {-4.56, 9.03, -3.0, -2.3, 5.0, -0.1, -4.9, -2.27, 0.0});
         Arrays.stream(initialResult).forEach(System.out::println);

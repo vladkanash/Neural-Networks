@@ -12,7 +12,9 @@ public class Layer {
 
     public enum LayerType {
         CONVOLUTION,
-        FULLY_CONNECTED
+        FULLY_CONNECTED,
+        SOFTMAX,
+        POOLING
     }
 
     private int neuronCount;
