@@ -7,6 +7,7 @@ import org.apache.commons.lang3.Validate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.function.DoubleSupplier;
 import java.util.stream.Collectors;
 
 /**
@@ -20,17 +21,18 @@ public class DataSetUtils {
     }
 
     public static List<DataSet> getRandomDataSetList(final Dimension dimension, final int size) {
+        return generateDataSet(dimension, size, () -> random.nextDouble() / 4);
+    }
+
+    public static List<DataSet> generateDataSet(final Dimension dimension,
+                                                final int size,
+                                                final DoubleSupplier supplier) {
         Validate.notNull(dimension, "dimension must not be null");
         Validate.isTrue(size >= 1);
 
         final List<DataSet> result = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            result.add(new DataSet(
-                    random.doubles(dimension.getSize())
-                            .map(e -> e / 4)
-                            .boxed()
-                            .collect(Collectors.toList()),
-                    dimension));
+            result.add(new DataSet(dimension, supplier));
         }
         return result;
     }

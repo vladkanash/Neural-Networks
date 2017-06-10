@@ -66,7 +66,7 @@ public class ConvolutionNetLayer extends NetLayer {
 
         this.deltas.update(deltas);
         for (int i = 0; i < deltas.getDimension().getDepth(); i++) {
-            final DataSet deltasLayer = this.deltas.getChannel(i);
+            final DataSet deltasLayer = this.deltas.getChannel(i).expand(prevOutputs.getDimension().getDepth());
             final DataSet inputs = this.prevOutputs.rotate().update(activationFunction.getForwardOperator());
             final DataSet weightsDelta = mathOperations.convolveGradient(deltasLayer, inputs, 0);
             this.costGradients.get(i).merge(weightsDelta, (a, b) -> a + b);

@@ -37,7 +37,9 @@ public class Network {
                 break;
             }
             case SOFTMAX: {
-                newLayer = new SoftmaxNetLayer(inputDim, layer.getActivationFunction());
+                final Dimension topWeightsDimension = getTopLayer().getWeights().get(0).getDimension();
+                final int topWeightsSize = getTopLayer().getWeights().size();
+                newLayer = new SoftmaxNetLayer(inputDim, topWeightsDimension, topWeightsSize, layer.getActivationFunction());
             }
             default: {
                 break;

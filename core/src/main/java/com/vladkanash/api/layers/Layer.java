@@ -60,6 +60,11 @@ public class Layer {
         return this;
     }
 
+    public Layer withIdentityActivation() {
+        appendActivationFunction(ActivationFunction.IDENTITY);
+        return this;
+    }
+
     private void appendActivationFunction(final ActivationFunction function) {
         Validate.notNull(function, "function must not be null");
         final DoubleUnaryOperator newForward = this.activationFunction.getForwardOperator()
