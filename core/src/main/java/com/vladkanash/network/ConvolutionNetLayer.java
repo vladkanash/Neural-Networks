@@ -49,12 +49,13 @@ public class ConvolutionNetLayer extends NetLayer {
 
     @Override
     void backward(DataSet deltas, List<DataSet> childrenWeights) {
-        final double learningRate = 0.5;
-        final int padding  = this.getWeights().get(0).getDimension().getWidth() - 1;
+        final int padding  = childrenWeights.get(0).getDimension().getWidth() - 1;
 
         final DataSet result = new DataSet(selfOutputs.getDimension(), () -> 0);
-        for (int i = 0; i < childrenWeights.size(); i++) {
-            final DataSet partialResult = mathOperations.convolve(childrenWeights.get(i).rotate(), deltas.getChannel(i), padding);
+        for (int i = 0; i < deltas.getDimension().getDepth(); i++) {
+            final DataSet deltasLayer = deltas.getChannel(i).expand(selfOutputs.getDimension().getDepth());
+            final DataSet input = childrenWeights.get(i).rotate();
+            final DataSet partialResult = mathOperations.convolveGradient(input, deltasLayer, padding);
             result.merge(partialResult, (a, b) -> a + b);
         }
 
@@ -65,18 +66,24 @@ public class ConvolutionNetLayer extends NetLayer {
 
         this.deltas.update(deltas);
         for (int i = 0; i < deltas.getDimension().getDepth(); i++) {
-            final DataSet weightsDelta = mathOperations.convolve(this.deltas.getChannel(i),
-                    this.prevOutputs.rotate().update(activationFunction.getForwardOperator()), 0);
-            getWeights().get(i).merge(weightsDelta.update(e -> e * learningRate), (a, b) -> a - b);
+            final DataSet deltasLayer = this.deltas.getChannel(i);
+            final DataSet inputs = this.prevOutputs.rotate().update(activationFunction.getForwardOperator());
+            final DataSet weightsDelta = mathOperations.convolveGradient(deltasLayer, inputs, 0);
+            this.costGradients.get(i).merge(weightsDelta, (a, b) -> a + b);
+//            getWeights().get(i).merge(weightsDelta, (a, b) -> a - b);
         }
+
+//        for (int i = 0; i < deltas.getDimension().getDepth(); i++) {
+//            final DataSet weightsDelta = mathOperations.convolve(this.deltas.getChannel(i),
+//                    this.prevOutputs.rotate().update(activationFunction.getForwardOperator()), 0);
+//            getWeights().get(i).merge(weightsDelta.update(e -> e * learningRate), (a, b) -> a - b);
+//        }
 //        this.deltas.getData().forEach(System.out::println);
 //        System.out.println('\n');
     }
 
     @Override
     void lastLayerBackward(DataSet deltas, DataSet y, DataSet outputs) {
-        final double learningRate = 2;
-
         final double[] layerDeltas = new double[deltas.getSize()];
         Arrays.setAll(layerDeltas, i ->
                 this.activationFunction.getBackwardOperator().applyAsDouble(outputs.get(i)) * (outputs.get(i) - y.get(i)));
@@ -84,9 +91,11 @@ public class ConvolutionNetLayer extends NetLayer {
 
         this.deltas.update(deltas);
         for (int i = 0; i < deltas.getDimension().getDepth(); i++) {
-            final DataSet weightsDelta = mathOperations.convolve(this.deltas.getChannel(i).expand(prevOutputs.getDimension().getDepth()),
-                    this.prevOutputs.rotate().update(activationFunction.getForwardOperator()), 0);
-            getWeights().get(i).merge(weightsDelta.update(e -> e * learningRate), (a, b) -> a - b);
+            final DataSet deltasLayer = this.deltas.getChannel(i).expand(prevOutputs.getDimension().getDepth());
+            final DataSet inputs = this.prevOutputs.rotate().update(activationFunction.getForwardOperator());
+            final DataSet weightsDelta = mathOperations.convolveGradient(deltasLayer, inputs, 0);
+            this.costGradients.get(i).merge(weightsDelta, (a, b) -> a + b);
+//            getWeights().get(i).merge(weightsDelta, (a, b) -> a - b);
         }
 
 //        this.deltas.getData().forEach(System.out::println);

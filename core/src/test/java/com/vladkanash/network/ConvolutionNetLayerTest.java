@@ -5,11 +5,12 @@ import com.vladkanash.network.data.DataSet;
 import com.vladkanash.network.data.Dimension;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Spy;
+import org.mockito.runners.MockitoJUnitRunner;
 
-/**
- * Created by vladk on 04.05.2017.
- */
+
+@RunWith(MockitoJUnitRunner.class)
 public class ConvolutionNetLayerTest {
 
     @Spy
@@ -32,6 +33,4 @@ public class ConvolutionNetLayerTest {
     public void backward() throws Exception {
 
     }
-
-
 }

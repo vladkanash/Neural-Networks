@@ -93,4 +93,6 @@ public class Layer {
     public static Layer fullyConn(int neuronCount) {
         return new Layer(LayerType.FULLY_CONNECTED, neuronCount);
     }
+
+    public static Layer softMax() { return new Layer(LayerType.SOFTMAX, 0);}
 }

@@ -12,12 +12,12 @@ import java.util.List;
  */
 public class SoftmaxNetLayer extends NetLayer {
 
+    private Double sum;
 
     SoftmaxNetLayer(
             final Dimension inputDimension,
-            final Dimension outputDimension,
             final ActivationFunction activationFunction) {
-        super(inputDimension, outputDimension,
+        super(inputDimension, inputDimension,
                 DataSetUtils.getRandomDataSetList(Dimension.EMPTY, 1), activationFunction);
     }
 
@@ -25,6 +25,7 @@ public class SoftmaxNetLayer extends NetLayer {
     void forward(final DataSet dataSet) {
         final double sum = dataSet.getStreamData().sum();
         dataSet.update(e -> e / sum);
+        this.sum = sum;
     }
 
     @Override

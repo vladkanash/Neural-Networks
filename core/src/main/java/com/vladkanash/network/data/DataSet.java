@@ -190,7 +190,7 @@ public class DataSet {
 
     public DataSet expand(final int newDepth) {
         Validate.isTrue(this.getDimension().getDepth() == 1);
-        Validate.isTrue(newDepth > 1);
+        Validate.isTrue(newDepth > 0);
 
         final List<Double> newData = this.getStreamData()
                 .flatMap(e -> DoubleStream.generate(() -> e).limit(newDepth))

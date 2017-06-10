@@ -98,6 +98,46 @@ public class ApacheMathOperations implements MathOperations {
         return new DataSet(result, new Dimension(outputWidth, outputHeight, outputDepth));
     }
 
+    @Override
+    public DataSet convolveGradient(DataSet deltas, DataSet input, int padding) {
+        final int inputWidth = input.getDimension().getWidth();
+        final int inputHeight = input.getDimension().getHeight();
+        final int inputDepth = input.getDimension().getDepth();
+
+        final int kernelWidth = deltas.getDimension().getWidth();
+        final int kernelHeight = deltas.getDimension().getHeight();
+        final int kernelDepth = deltas.getDimension().getDepth();
+
+        final int outputWidth = inputWidth - kernelWidth + 1 + padding * 2;
+        final int outputHeight = inputHeight - kernelHeight + 1 + padding * 2;
+        final int outputDepth = inputDepth;
+
+        final DataSet result = new DataSet(new Dimension(outputWidth, outputHeight, outputDepth), () -> 0);
+
+        int ay = -padding;
+        for (int y = 0; y < outputHeight; y++, ay++) {
+            int ax = -padding;
+            for (int x = 0; x < outputWidth; x++, ax++) {
+
+                for (int fx = 0; fx < kernelWidth; fx++) {
+                    int ox = ax + fx;
+                    for (int fy = 0; fy < kernelHeight; fy++) {
+                        int oy = ay + fy;
+
+                        if (oy >= 0 && oy < inputHeight && ox >= 0 && ox < inputWidth) {
+
+                            for (int z = 0; z < inputDepth; z++) {
+                                result.set(x, y, z, result.get(x, y, z) + deltas.get(fx, fy, z) * input.get(ox, oy, z));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
     private DataSet multiply(final RealMatrix matrix, final DataSet vector) {
         final double[] result = matrix.operate(vector.getArrayData());
         final Dimension resultDimension = new Dimension(1, 1, matrix.getRowDimension());

@@ -16,6 +16,7 @@ public abstract class NetLayer {
     final LayerDimensions layerDimensions;
     final DataSet deltas;
     final List<DataSet> weights;
+    final List<DataSet> costGradients;
     final DataSet prevOutputs;
     final DataSet selfOutputs;
     final ActivationFunction activationFunction;
@@ -42,6 +43,24 @@ public abstract class NetLayer {
         this.selfOutputs = new DataSet(dimensions.getOutputDimension(), () -> 0);
         this.activationFunction = activationFunction;
         this.weights = weights;
+        this.costGradients = initCostGradients(weights);
+    }
+
+    private List<DataSet> initCostGradients(List<DataSet> weights) {
+        final List<DataSet> costGradients = new ArrayList<>(weights.size());
+        for (int i = 0; i < weights.size(); i++) {
+            final DataSet costGradient = new DataSet(weights.get(0).getDimension(), () -> 0);
+            costGradients.add(costGradient);
+        }
+        return costGradients;
+    }
+
+    public void updateWeights(final double alpha, final int backwardsCount) {
+       for (int i = 0; i < weights.size(); i++) {
+           final DataSet costGradient = costGradients.get(i);
+           weights.get(i).merge(costGradient.update(e -> e  * alpha), (a, b) -> a - b);
+           costGradient.update(e -> 0);
+       }
     }
 
     LayerDimensions getLayerDimensions() {

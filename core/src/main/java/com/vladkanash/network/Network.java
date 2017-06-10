@@ -15,6 +15,7 @@ public class Network {
 
     private final LinkedList<NetLayer> layers = new LinkedList<>();
     private final Dimension inputDimension;
+    private int backwardsCount = 0;
 
     public Network(final Dimension inputDimension) {
         Validate.notNull(inputDimension, "input dimension must not be null");
@@ -28,12 +29,15 @@ public class Network {
         final Dimension inputDim = getTopDimension();
         switch(layer.getType()) {
             case FULLY_CONNECTED: {
-                newLayer = new FullyConnectedNetLayer(layer.getNeuronCount(), inputDim, layer.getActivationFunction());
+                newLayer = new FullyConnectedNetLayer(inputDim, layer.getNeuronCount(), layer.getActivationFunction());
                 break;
             }
             case CONVOLUTION: {
                 newLayer = new ConvolutionNetLayer(inputDim, layer.getFilterSize(), layer.getNeuronCount(), layer.getActivationFunction());
                 break;
+            }
+            case SOFTMAX: {
+                newLayer = new SoftmaxNetLayer(inputDim, layer.getActivationFunction());
             }
             default: {
                 break;
@@ -62,6 +66,11 @@ public class Network {
         return dataSet;
     }
 
+    public void updateWeights(double alpha) {
+        this.layers.forEach(l -> l.updateWeights(alpha, backwardsCount));
+        backwardsCount = 0;
+    }
+
     void backward(final DataSet y, final DataSet outputs) {
         final Iterator<NetLayer> iter = layers.descendingIterator();
         final DataSet deltas = new DataSet(y.getDimension(), () -> 1);
@@ -76,6 +85,7 @@ public class Network {
             }
             lastLayer = layer;
         }
+        backwardsCount++;
     }
 
     public Dimension getInputDimension() {

@@ -19,8 +19,8 @@ import java.util.Collections;
 public class FullyConnectedNetLayerTest {
 
     @Spy
-    private FullyConnectedNetLayer layer = new FullyConnectedNetLayer(4,
-            new Dimension(2, 2, 2), ActivationFunction.IDENTITY);
+    private FullyConnectedNetLayer layer = new FullyConnectedNetLayer(
+            new Dimension(2, 2, 2), 4, ActivationFunction.IDENTITY);
 
     private final static double[] mockWeights = new double[] {2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0,
                                                               2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0,
@@ -29,8 +29,8 @@ public class FullyConnectedNetLayerTest {
 
     @Before
     public void setup() {
-        this.layer = new FullyConnectedNetLayer(4,
-                new Dimension(2, 2, 2), ActivationFunction.IDENTITY);
+        this.layer = new FullyConnectedNetLayer(
+                new Dimension(2, 2, 2), 4, ActivationFunction.IDENTITY);
 
         //Mockito.when(layer.getWeights()).thenReturn(new DataSet(mockWeights, new Dimension(8, 4)));
         //Mockito.doNothing().when(layer).backward(Mockito.any(), Mockito.any());

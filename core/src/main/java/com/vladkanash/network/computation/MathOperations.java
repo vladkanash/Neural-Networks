@@ -18,6 +18,8 @@ public interface MathOperations {
 
     DataSet convolve(final List<DataSet> kernels, final DataSet input, final int padding);
 
+    DataSet convolveGradient(final DataSet deltas, final DataSet input, final int padding);
+
     default DataSet convolve(final DataSet kernel, final DataSet input, final int padding) {
         final List<DataSet> kernels = new ArrayList<>();
         kernels.add(kernel);

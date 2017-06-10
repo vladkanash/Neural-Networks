@@ -1,7 +1,5 @@
 package com.vladkanash.network.computation;
 
-import javax.xml.crypto.Data;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +51,15 @@ public class ApacheMathOperationsTest {
 
         final DataSet result = operations.convolve(kernel, input, 1);
         System.out.println(result);
+    }
+
+    @Test
+    public void convolveGradientTest() {
+        final DataSet input = new DataSet(new Double[]{1.0, 2.0, 3.0, 1.0, 2.0, 3.0, 1.0, 2.0, 3.0, 1.0, 2.0, 3.0},
+                new Dimension(2, 2, 3));
+        final DataSet kernel = new DataSet(new Dimension(2, 2, 1), () -> 1.0);
+        final DataSet result = operations.convolveGradient(kernel, input, 0);
+        Assert.assertEquals(input.getDimension().getDepth(), result.getDimension().getDepth());
     }
 
 }
